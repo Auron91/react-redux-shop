@@ -1,23 +1,25 @@
 import "./App.css";
+import { Router, Route, Switch } from 'react-router-dom';
 import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import ProductGrid from "./components/ProductGrid";
-import { Container, Grid } from "semantic-ui-react";
+import Shop from './components/Shop';
+import Home from './components/Home'
+
+import history from './history'
+
+import { Container } from "semantic-ui-react";
 
 function App() {
   return (
     <div className="">
-      <Header />
-      <Container>
-        <Grid>
-          <Grid.Column width={4}>
-            <Sidebar />
-          </Grid.Column>
-          <Grid.Column width={12}>
-            <ProductGrid />
-          </Grid.Column>
-        </Grid>
-      </Container>
+      <Router history={history}>
+        <Header />
+        <Container>
+          <Switch>
+            <Route path='/' exact component={Home} />
+            <Route path='/shop' component={Shop} />
+          </Switch>
+        </Container>
+      </Router>
     </div>
   );
 }

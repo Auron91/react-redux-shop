@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { Dropdown, Menu, Card, Image, Grid, Label } from "semantic-ui-react";
+import { connect } from 'react-redux';
+import { Card, Image, Grid, Label } from "semantic-ui-react";
+import FilterBar from './FilterBar';
+import { fetchProducts } from '../actions';
 
 const filterOptions = [
-  {
-    key: "Sort By",
-    text: "Sort By",
-    value: "Sort By",
-  },
   {
     key: "Most Popular",
     text: "Most Popular",
@@ -29,82 +27,49 @@ const filterOptions = [
   },
 ];
 
-const products = [
-  {
-    key: "1",
-    name: "M670BTG",
-    image: "M670BTG.png",
-    price: 199,
-    description: "Comfortable",
-    stock: 10,
-    isNew: true,
-  },
-  {
-    key: "2",
-    name: "M991BTG",
-    image: "M991BTG.png",
-    price: 399,
-    description: "Beautiful",
-    stock: 10,
-    isNew: false,
-  },
-  {
-    key: "3",
-    name: "M1500BTG",
-    image: "M1500BTG.png",
-    price: 299,
-    description: "Godlike",
-    stock: 10,
-    isNew: false,
-  },
-  {
-    key: "4",
-    name: "M991ANI",
-    image: "M991ANI.png",
-    price: 349,
-    description: "dull",
-    stock: 10,
-    isNew: false,
-  },
-];
-
-const renderProducts = products.map((product) => {
-  return (
-    <Grid.Column>
-      <Card className="card">
-        <Card.Content>
-            {product.isNew && <Label color="black" className="newBadge">NEW</Label>}
-          <Image src={`/images/${product.image}`} />
-            <Card.Header floated = 'left'>{product.name}</Card.Header>
-            <Card.Meta  textAlign='right'>{product.price}$</Card.Meta>
-        </Card.Content>
-      </Card>
-    </Grid.Column>
-  );
-});
-
-export default class ProductGrid extends Component {
+class ProductGrid extends Component {
   state = {};
 
-  handleFilterChange = () => {};
+  componentDidMount() {
+    this.props.fetchProducts();
+
+  }
+
+  renderProducts() {
+    console.log(this.props.view);
+    return this.props.products.map(product => {
+      return (
+        <Grid.Column key={product.id}>
+          <Card  className="card">
+            <Card.Content>
+                {product.isNew && <Label color="black" className="newBadge">NEW</Label>}
+              <Image src={`/images/${product.image}`} />
+                <Card.Header floated = 'left'>{product.name}</Card.Header>
+                <Card.Meta  textAlign='right'>{product.price}$</Card.Meta>
+            </Card.Content>
+          </Card>
+        </Grid.Column>
+      )
+    })
+  }
+
   render() {
     return (
       <div className="">
-        <Menu>
-          <Menu.Item className="filterDropdown">
-            <p>Sort by:</p>
-            <Dropdown
-              placeholder="Most popular"
-              fluid
-              selection
-              options={filterOptions}
-            />
-          </Menu.Item>
-        </Menu>
+        <FilterBar options = {filterOptions} />
         <Grid columns={3} stackable>
-          {renderProducts}
+          {this.renderProducts()}
         </Grid>
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    products: Object.values(state.products),
+    view: state.settings.view
+  };
+}
+
+export default connect(mapStateToProps, { fetchProducts })(ProductGrid)
