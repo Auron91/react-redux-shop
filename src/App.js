@@ -1,27 +1,25 @@
-import React, { Component } from 'react';
-import Header from './components/Header';
-import { Container } from '@material-ui/core';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
-import { teal } from '@material-ui/core/colors';
+import "./App.css";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import ProductGrid from "./components/ProductGrid";
+import { Container, Grid } from "semantic-ui-react";
 
-const theme = createMuiTheme({
-    palette: {
-        primary: teal,
-        secondary: {
-          main: '#ec407a',
-        },
-      },
-})
-
-const App = () => {
-    return (
-        <ThemeProvider theme = {theme}>
-            <Container>
-                <Header />
-            </Container>
-        </ThemeProvider>
-    );
+function App() {
+  return (
+    <div className="">
+      <Header />
+      <Container>
+        <Grid>
+          <Grid.Column width={4}>
+            <Sidebar />
+          </Grid.Column>
+          <Grid.Column width={12}>
+            <ProductGrid />
+          </Grid.Column>
+        </Grid>
+      </Container>
+    </div>
+  );
 }
 
 export default App;
